@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
 const api = axios.create({
     baseURL: 'https://piupiuwer.polijrinternal.com',

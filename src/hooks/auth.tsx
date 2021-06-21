@@ -34,7 +34,9 @@ interface PiuLike {
 
 interface AuthContextData {
     user: User,
-    token: string
+    token: string,
+    login(loginCred : LoginCredentials): void,
+    logout(): void
   }
 
 interface AuthState {
@@ -59,20 +61,20 @@ export const AuthProvider: React.FC = ({children}) => {
         }
 
         return {} as AuthState;
-  });
+    });
 
 	const login = async ({ email, password }: LoginCredentials) => {
-      const response = await api.post('/login/', {
-          email,
-          password,
-      });
+        const response = await api.post('/sessions/login/', {
+            email,
+            password,
+        });
 
-      const { token, user } = response.data;
-      localStorage.setItem('@Project:token', token);
-      localStorage.setItem('@Project:user', JSON.stringify(user));
+        const { token, user } = response.data;
+        localStorage.setItem('@Project:token', token);
+        localStorage.setItem('@Project:user', JSON.stringify(user));
 
-      setUserData({ token, user });
-  };
+        setUserData({ token, user });
+    };
 
     const logout = () => {
         localStorage.removeItem('@Project:user');
@@ -84,7 +86,9 @@ export const AuthProvider: React.FC = ({children}) => {
   return (
     <AuthContext.Provider value={{
         user: userData.user,
-        token: userData.token
+        token: userData.token,
+        login: login,
+        logout: logout
     }}
     >
         {children}
