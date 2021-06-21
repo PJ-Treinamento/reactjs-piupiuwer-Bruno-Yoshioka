@@ -1,10 +1,15 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import AppProvider from './hooks';
+import Routes from './routes';
 
-function App() {
+const App: React.FC = () => {
   return (
-   <h1>
-     Funcionou
-   </h1>
+    <BrowserRouter>
+      <AppProvider>
+        <Routes />
+      </AppProvider>
+    </BrowserRouter>
   );
 }
 
