@@ -49,6 +49,7 @@ export const Direita = styled.div`
 export const Log = styled.h2`
     color: #000000;
     font: bold;
+    margin-bottom: 48px;
 `
 
 export const Input = styled.input`
@@ -57,28 +58,12 @@ export const Input = styled.input`
     margin-bottom: 16px;
 `
 
-export const Robot = styled.div`
-    width: 350px;
-    height: 40px;
-    
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-`
-
-export const CheckBox = styled.input`
-    margin-right: 16px;
-`
-
-export const RobotLabel = styled.label`
-    color: #000000;
-`
-
 export const LogIn = styled.button`
+    margin-top: 24px;
     width: 350px;
     height: 40px;
     background-color: #FF477E;
     color: #FFFFFF;
     font-size: large;
+    cursor: pointer;
 `

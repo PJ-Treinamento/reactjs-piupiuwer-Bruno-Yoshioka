@@ -39,3 +39,43 @@ export const UserImage = styled.img`
 export const UserName = styled.h3`
     font: bold #000000;
 `
+
+export const PiuText = styled.p`
+
+`
+
+export const CardF = styled.div`
+    width: 766px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`
+
+export const Buttons = styled.button`
+    background: none;
+	border: none;
+	cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 16px;
+
+
+    :hover {
+        background-color: #FF477E;
+        opacity: 60%;
+        cursor: pointer;
+    }
+`
+
+export const ImgButton = styled.img`
+    height: 30px;
+    width: 30px;
+    margin-right: 8px;
+`
+
+export const LikeText = styled.p`
+    padding-right: 8px;
+    cursor: pointer;
+`

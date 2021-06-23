@@ -34,10 +34,18 @@ interface PiuLike {
 	piu: Piu;
 }
 
+interface texto {
+    text: string
+}
+
 const PFeed: React.FC = () => {
 
     const { logout, token } = useAuth();
+    const { user } = useAuth();
     const [pius, setPius] = useState<Piu[]>();
+    const [textoPiu, setTextoPiu] = useState<string>('');
+    const [reload, setReload] = useState(0);
+    const [piuLength, setPiuLength] = useState(0);
 
     const getPius = async () => {
 
@@ -50,7 +58,16 @@ const PFeed: React.FC = () => {
 
     useEffect (() => {
         getPius();
-    }, []);
+    }, [reload]);
+
+    const postPiu = async ({text}: texto) => {
+        const response = await api.post('/pius', {'text': text},        
+        {headers: {
+            'Authorization': `Bearer ${token}` 
+        } });
+        setTextoPiu('');
+        setReload(reload+1);
+    };
 
     return (
 		<>
@@ -58,20 +75,27 @@ const PFeed: React.FC = () => {
                 <S.Imagem src={Logo} alt="Logo" />
                 <S.Nome>Piupiuwer</S.Nome>
                 <input type="text" />
-                <button onClick={() => logout()}>botão de logout</button>
+                <S.Logout onClick={() => logout()}>Logout</S.Logout>
             </S.Header>
             <S.Feed>
-                {
-                    pius?.map(piu => {
-                        return(
-                            <PiuCard
-                            user={piu.user}
-                            likes={piu.likes}
-                            text={piu.text}
-                            /> 
-                        )
-                    })
-                }
+                <div>
+                    <textarea value={textoPiu} id="newPost" name="piud" placeholder="O que você está pensando?" onChange={(e) => {setTextoPiu(e.target.value); setPiuLength(piuLength+1)}}></textarea>
+                    <button onClick={() => postPiu({text: `${textoPiu}`})}>Piar</button>
+                </div>
+                <div>
+                    {
+                        pius?.map(piu => {
+                            return(
+                                <PiuCard
+                                id={piu.id}
+                                user={piu.user}
+                                likes={piu.likes}
+                                text={piu.text}
+                                /> 
+                            )
+                        })
+                    }
+                </div>
             </S.Feed>
             
         </>

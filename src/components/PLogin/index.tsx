@@ -20,10 +20,6 @@ const PLogin: React.FC = () => {
                     <S.Log>Entre no Piupiuwer</S.Log>
                     <S.Input type="text" placeholder="Email" onChange={(e) => setEmail(e.target.value)}/>
                     <S.Input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
-                    <S.Robot>
-                        <S.CheckBox type="checkbox" />
-                        <S.RobotLabel> Não sou um robô</S.RobotLabel>
-                    </S.Robot>
                     <S.LogIn onClick={() => login({email:`${email}`, password:`${password}`})}>Entrar</S.LogIn>
 
             </S.Direita>
