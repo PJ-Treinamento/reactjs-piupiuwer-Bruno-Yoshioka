@@ -7,6 +7,7 @@ import trash from '../../assets/trash.svg';
 import * as S from './styles';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
+import Loading from '../../assets/Loading.svg';
 
 interface User {
 	id: string;
@@ -28,6 +29,8 @@ interface Piu {
 	user: User;
 	likes: PiuLike[];
 	text: string;
+	likado?: string;
+	favorito?: string;
 }
 
 interface PiuLike {
@@ -44,58 +47,70 @@ const PiuCard: React.FC<Piu> = ({id, user, likes, text}) => {
     const { token } = useAuth();
 	const { user: User} = useAuth();
 	const [ likeCounter, setLikeCounter] = useState(likes.length);
-	const [ fav, setFav ] = useState('');
-	const [ usuario, setUsuario] = useState<User>(User);
-	const [ favoritado, setFavoritado] = useState(Star);
-	const [liked, setLiked] = useState(Like);
-
+	const [ favoritado, setFavoritado] = useState(Loading);
+	const [liked, setLiked] = useState(Loading);
+	
 	const GetFav = async () => {
-		const response = await api.get(`/users?username=${User.username}`,
-		{	headers: {'Authorization': `Bearer ${token}` },
+		const response = await api.get(`/users?username=${User.username}`, {
+		  headers: {
+			Authorization: `Bearer ${token}`,
+		  },
 		});
-		let achou = false;
-		setUsuario(response.data);
-		response.data[0].favorites.map((favorito : any) => {
-			if (id === favorito.id) {
-				achou = true;
+			let achou = false;
+		achou = response.data[0].favorites.some((favorito : any) => {
+				return id === favorito.id;
+			});
+			if (achou === true) {
+				setFavoritado(StarA);
+			} else { 
+				setFavoritado(Star);
 			}
-		});
-		if (achou === true) {
-			setFav('F');
-			setFavoritado(StarA);
-		} else {
-			setFav('N');
-			setFavoritado(Star);
 		}
-	}
-
+	
 	const GetLike = async () => {
-		const response = await api.get(`/users?username=${User.username}`,
-		{	headers: {'Authorization': `Bearer ${token}` },
+		const response = await api.get(`/users?username=${User.username}`, {
+		  headers: {
+			Authorization: `Bearer ${token}`,
+		  },
 		});
-		let achou = false;
-		setUsuario(response.data);
-		achou = likes.some((piuLike) =>{
-			return piuLike.user.id === response.data[0].id;
-		});
-		// response.data[0].likes.map((like : any) => {
-		// 	if (id === like.piu.id) {
-		// 		achou = true;
-		// 	}
-		// });
-		if (achou === true) {
-			setLiked(LikeR);
-		} else {
-			setLiked(Like);
+			let achou = false;
+			achou = likes.some((piuLike:any) =>{
+				return piuLike.user.id === response.data[0].id;
+			});
+			if (achou === true) {
+				setLiked(LikeR);
+			} else {
+				setLiked(Like);
+			}
+		}
+
+
+	
+	useEffect (() => {
+		PrintPiu();
+		GetFav();
+		GetLike();
+
+	}, [likeCounter]);
+
+
+
+
+
+	const deletePiu = async () => {
+		if (user.username === User.username) {
+			await api.delete('/pius', 
+		{	data : { piu_id : id}, headers: {'Authorization': `Bearer ${token}`}}
+		);		
+			window.location.reload();
 		}
 	}
 
-	useEffect (() => {
-		GetLike();
-		GetFav();
-	}, []);
+	
 
 	const PrintPiu = () => {
+
+
 		return (
 			<>
 				<S.Card>
@@ -104,12 +119,12 @@ const PiuCard: React.FC<Piu> = ({id, user, likes, text}) => {
 							<S.UserImage src={user.photo} alt="user_photo" />
 							<S.UserName>{user.first_name}</S.UserName>
 						</S.User>
-						<S.Buttons><S.ImgButton src={trash} alt="Buttons" /></S.Buttons>
+						<S.Buttons onClick={() => deletePiu()}><S.ImgButtonD obaoba={user.username===User.username} src={trash} alt="Buttons" /></S.Buttons>
 					</S.CardHeader>
 					<S.PiuText>{text}</S.PiuText>
 					<S.CardF>
-						<S.Buttons onClick={() => likePiu({id:`${id}`})}><S.ImgButton src={liked} />{likeCounter} likes</S.Buttons>
-						<S.Buttons onClick={() => FavPiu({id:`${id}`})}><S.ImgButton src={favoritado} />{fav}</S.Buttons>
+						<S.Buttons onClick={() => likePiu({id:`${id}`})}><S.ImgButtonL src={liked} />{likeCounter} likes</S.Buttons>
+						<S.Buttons onClick={() => FavPiu({id:`${id}`})}><S.ImgButtonF src={favoritado} /></S.Buttons>
 					</S.CardF>
 				</S.Card>
 			</>
@@ -117,7 +132,6 @@ const PiuCard: React.FC<Piu> = ({id, user, likes, text}) => {
 	}
 
 	const likePiu = async ({id} : PiuId) => {
-
         const response = await api.post('/pius/like', {'piu_id': id},
 		{	headers: {'Authorization': `Bearer ${token}` },
 		});
@@ -131,24 +145,18 @@ const PiuCard: React.FC<Piu> = ({id, user, likes, text}) => {
     };
 
 	const FavPiu = async ({id} : PiuId) => {
-		if(fav === 'N') {
-			setFav('F');
+		if(favoritado === Star) {
 			setFavoritado(StarA);
 			await api.post('/pius/favorite', {'piu_id': id},
 			{	headers: {'Authorization': `Bearer ${token}` },
 			});
 		} else {
-			setFav('N');
 			setFavoritado(Star);
 			await api.post('/pius/unfavorite', {'piu_id': id},
 			{	headers: {'Authorization': `Bearer ${token}` },
 			});
 		}	
 	};
-
-	useEffect (() => {
-		PrintPiu()
-	}, [likeCounter, fav ]);
 
     return(
 			PrintPiu()
