@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Card = styled.div`
     width: 100%;
     height: auto;
-    border: 1px solid #685B7C;
+    border: 1.5px solid  #685B7C;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 4px;
@@ -37,10 +37,12 @@ export const UserImage = styled.img`
 `
 
 export const UserName = styled.h3`
+    font-size: medium;
     font: bold #000000;
 `
 
 export const PiuText = styled.p`
+    font-size: medium;
     margin-top: 10px;
 `
 
@@ -60,12 +62,13 @@ export const Buttons = styled.button`
     display: flex;
     align-items: center;
     justify-content: space-around;
-    border-radius: 16px;
+    border-radius: 8px;
+    padding: 2px;
 
 
     :hover {
-        background-color: #FF477E;
-        opacity: 60%;
+        background-color: #FF85A1;
+        opacity: 100%;
         cursor: pointer;
     }
 `

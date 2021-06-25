@@ -87,17 +87,19 @@ const PFeed: React.FC = () => {
   return (
     <>
       <S.Header>
-        <S.Imagem src={Logo} alt="Logo" />
-        <S.Nome>Piupiuwer</S.Nome>
-        <S.Search
-          placeholder="Pesquise no Piupiuwer"
-          type="text"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-          }}
-        />
-        <S.Logout onClick={() => logout()}>Logout</S.Logout>
+        <a href="/feed"><S.Imagem src={Logo} alt="Logo"/></a>
+        <h1>Piupiuwer</h1>
+        <div>
+          <S.Search
+            placeholder="Pesquise no Piupiuwer"
+            type="text"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+          />
+          <S.Logout onClick={() => logout()}>Logout</S.Logout>
+        </div>    
       </S.Header>
       <S.Feed>
         <div>
@@ -111,9 +113,11 @@ const PFeed: React.FC = () => {
               handleChange(e);
             }}
           ></S.TxtArea>
-          <button onClick={() => postPiu({ text: `${textoPiu}` })}>
-            Piar ({textoPiu.length})
-          </button>
+          <div>
+            <S.Contagem overLimit={overLimit}>{textoPiu.length}/140</S.Contagem>
+            <button onClick={() => postPiu({ text: `${textoPiu}` })}>Piar</button>
+          </div>
+          
         </div>
         <div>
           {pius?.map((piu) => {; 
